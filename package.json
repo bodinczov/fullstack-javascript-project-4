@@ -1,0 +1,24 @@
+{
+  "name": "@hexlet/code",
+  "version": "1.0.0",
+  "description": "[![Actions Status](https://github.com/bodinczov/fullstack-javascript-project-4/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/bodinczov/fullstack-javascript-project-4/actions)",
+  "type": "module",
+  "main": "main.js",
+  "bin": {
+    "page-loader": "bin/main.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "bodinczov",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^3.2.6",
+    "axios": "^1.7.7",
+    "cheerio": "^1.0.0",
+    "commander": "^12.1.0",
+    "js-beautify": "^1.15.1",
+    "lodash": "^4.17.21",
+    "path": "^0.12.7"
+  }
+}
