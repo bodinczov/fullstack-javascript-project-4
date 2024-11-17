@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "[![Actions Status](https://github.com/bodinczov/fullstack-javascript-project-4/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/bodinczov/fullstack-javascript-project-4/actions)",
   "type": "module",
-  "main": "bin/main.js",
+  "main": "src/downloadPage.js",
   "bin": {
     "page-loader": "bin/main.js"
   },
