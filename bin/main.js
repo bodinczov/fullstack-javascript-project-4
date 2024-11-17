@@ -6,9 +6,11 @@ async function main() {
   const { url, outputDir } = parseArguments();
   downloadPage(url, outputDir, (error) => {
     if (error) {
-      console.log(`Ошибка: ${error}`);
+      console.error(`Ошибка: ${error}`);
+      process.exit(1);
     } else {
       console.log('Page successfully downloaded!');
+      process.exit(0);
     }
   });
 }

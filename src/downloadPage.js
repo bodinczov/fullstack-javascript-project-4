@@ -1,38 +1,62 @@
 import axios from "axios";
-import fsp from 'fs/promises';
-import path from 'path';
-import pkg from 'js-beautify';
-import * as cheerio from 'cheerio';
-import { generateDirectoryPath, generateFileName } from "../src/utils.js";
-import { downloadPictures } from "../src/downloadPictures.js";
-
-const { html: beautifyHtml } = pkg;
-
-let htmlPage = '';
+import fs from "fs/promises";
+import path from "path";
+import jsBeautify from "js-beautify";
+import { load as cheerioLoad } from "cheerio";
+import { Listr } from "listr2";
+import { generateDirectoryPath, generateFileName } from "./utils.js";
+import { downloadPictures } from "./downloadPictures.js";
+import { downloadOtherResources } from "./downloadOtherResources.js";
 
 const downloadPage = (url, outputDir, callback) => {
   const fileName = generateFileName(url);
   const dirPath = generateDirectoryPath(outputDir, fileName);
+  const htmlFilePath = path.join(dirPath, fileName);
+  const { html: beautifyHtml } = jsBeautify;
 
-  fsp.access(outputDir)
-    .then(() => fsp.mkdir(dirPath, { recursive: true }))
-    .then(() => axios.get(url))
-    .then((response) => {
-      if (response.status !== 200) {
-        throw new Error(`Error! Status code: ${response.status}`);
-      }
+  const tasks = new Listr([
+    {
+      title: "Checking access to output directory",
+      task: () => fs.access(outputDir),
+    },
+    {
+      title: "Creating directory for page resources",
+      task: () => fs.mkdir(dirPath, { recursive: true }),
+    },
+    {
+      title: "Fetching page content from URL",
+      task: async (ctx) => {
+        const response = await axios.get(url);
+        ctx.html = response.data;
+      },
+    },
+    {
+      title: "Downloading pictures",
+      task: async (ctx) => {
+        const $ = cheerioLoad(ctx.html);
+        ctx.$ = $;
+        await downloadPictures(url, $, dirPath);
+      },
+    },
+    {
+      title: "Downloading other resources (CSS, JS)",
+      task: async (ctx) => {
+        await downloadOtherResources(url, ctx.$, dirPath);
+      },
+    },
+    {
+      title: "Saving HTML file",
+      task: async (ctx) => {
+        const formattedHtml = beautifyHtml(ctx.$.html());
+        await fs.writeFile(htmlFilePath, formattedHtml);
+      },
+    },
+  ]);
 
-      const $ = cheerio.load(response.data);
-      return downloadPictures(url, $, dirPath)
-        .then(() => beautifyHtml($.html()));
-    })
-    .then((formattedHtml) => {
-      const filePath = path.join(dirPath, fileName);
-      return fsp.writeFile(filePath, formattedHtml);
-    })
+  tasks
+    .run()
     .then(() => callback(null))
     .catch((error) => callback(error));
 };
 
-
-export { downloadPage, htmlPage };
+export { downloadPage };
