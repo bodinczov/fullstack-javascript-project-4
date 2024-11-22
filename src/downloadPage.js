@@ -53,7 +53,7 @@ const downloadPage = (url, outputDir, callback) => {
     },
   ]);
 
-  tasks
+  return tasks
     .run()
     .then(() => callback(null))
     .catch((error) => callback(error));
