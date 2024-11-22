@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs/promises';
 import nock from 'nock';
-import { downloadPage } from '../src/downloadPage.js';
+import downloadPage from '../src/downloadPage.js';
 
 const fixturesPath = path.resolve(__dirname, '../__fixtures__');
 

@@ -59,4 +59,4 @@ const downloadPage = (url, outputDir, callback) => {
     .catch((error) => callback(error));
 };
 
-export { downloadPage };
+export default downloadPage;
