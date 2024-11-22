@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { downloadPage } from '../src/downloadPage.js';
+import downloadPage from '../src/downloadPage.js';
 import parseArguments from '../src/parseArguments.js';
 
 async function main() {
