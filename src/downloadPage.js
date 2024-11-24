@@ -8,7 +8,7 @@ import { generateDirectoryPath, generateFileName } from "./utils.js";
 import { downloadPictures } from "./downloadPictures.js";
 import { downloadOtherResources } from "./downloadOtherResources.js";
 
-const downloadPage = (url, outputDir, callback) => {
+const downloadPage = (url, outputDir) => {
   const fileName = generateFileName(url);
   const dirPath = generateDirectoryPath(outputDir, fileName);
   const htmlFilePath = path.join(dirPath, fileName);
@@ -53,10 +53,7 @@ const downloadPage = (url, outputDir, callback) => {
     },
   ]);
 
-  return tasks
-    .run()
-    .then(() => callback(null))
-    .catch((error) => callback(error));
+  return tasks.run()
 };
 
 export default downloadPage;

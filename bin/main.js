@@ -4,15 +4,14 @@ import parseArguments from '../src/parseArguments.js';
 
 async function main() {
   const { url, outputDir } = parseArguments();
-  downloadPage(url, outputDir, (error) => {
-    if (error) {
-      console.error(`Ошибка: ${error}`);
-      process.exit(1);
-    } else {
-      console.log('Page successfully downloaded!');
-      process.exit(0);
-    }
-  });
+  try {
+    await downloadPage(url, outputDir);
+    console.log('Page successfully downloaded!');
+    process.exit(0);
+  } catch (error) {
+    console.error(`Ошибка: ${error.message}`);
+    process.exit(1);
+  }
 }
 
 main();
