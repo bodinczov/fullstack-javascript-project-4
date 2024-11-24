@@ -1,7 +1,7 @@
 import path from 'path';
 import { URL } from 'url';
 
-const sanitize = (str) => str.replace(/[^a-zA-Z0-9.]/g, '-');
+const sanitize = (str) => str.replace(/[^a-zA-Z0-9]/g, '-');
 
 const generateFileName = (url) => {
   const { hostname, pathname } = new URL(url);
