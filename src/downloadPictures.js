@@ -16,13 +16,21 @@ export async function downloadPictures(url, $, dirPath) {
       const resourceFileName = generateResourceFileName(url, resourceUrl);
       const resourceFilePath = path.join(dirPath, resourceFileName);
 
-      $(element).attr('src', resourceFileName);
+      // Обновляем путь к ресурсу относительно HTML-файла
+      const relativeResourcePath = path.join(path.basename(dirPath), resourceFileName);
+      $(element).attr('src', relativeResourcePath);
 
       const downloadPromise = axios
         .get(resourceUrl, { responseType: 'arraybuffer' })
-        .then((imageResponse) => fsp.writeFile(resourceFilePath, imageResponse.data))
+        .then((imageResponse) =>
+          fsp
+            .mkdir(path.dirname(resourceFilePath), { recursive: true })
+            .then(() => fsp.writeFile(resourceFilePath, imageResponse.data))
+        )
         .catch((error) => {
-          console.error(`Failed to download or save image: ${resourceUrl}, Error: ${error.message}`);
+          console.error(
+            `Failed to download or save image: ${resourceUrl}, Error: ${error.message}`
+          );
         });
 
       downloadPromises.push(downloadPromise);

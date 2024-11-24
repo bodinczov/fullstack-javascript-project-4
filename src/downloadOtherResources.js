@@ -17,16 +17,21 @@ export const downloadOtherResources = async (url, $, dirPath) => {
         const resourceFileName = generateResourceFileName(url, resourceUrl);
         const resourceFilePath = path.join(dirPath, resourceFileName);
 
-        $(element).attr(attr, resourceFileName);
+        // Обновляем путь к ресурсу относительно HTML-файла
+        const relativeResourcePath = path.join(path.basename(dirPath), resourceFileName);
+        $(element).attr(attr, relativeResourcePath);
 
         const downloadPromise = axios
           .get(resourceUrl, { responseType: 'arraybuffer' })
           .then((response) => {
-            return fsp.mkdir(path.dirname(resourceFilePath), { recursive: true })
+            return fsp
+              .mkdir(path.dirname(resourceFilePath), { recursive: true })
               .then(() => fsp.writeFile(resourceFilePath, response.data));
           })
           .catch((error) => {
-            console.error(`Failed to fetch or save resource: ${resourceUrl}, Error: ${error.message}`);
+            console.error(
+              `Failed to fetch or save resource: ${resourceUrl}, Error: ${error.message}`
+            );
           });
 
         downloadPromises.push(downloadPromise);

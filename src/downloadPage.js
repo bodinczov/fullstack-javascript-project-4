@@ -11,7 +11,7 @@ import { downloadOtherResources } from "./downloadOtherResources.js";
 const downloadPage = (url, outputDir) => {
   const fileName = generateFileName(url);
   const dirPath = generateDirectoryPath(outputDir, fileName);
-  const htmlFilePath = path.join(dirPath, fileName);
+  const htmlFilePath = path.join(outputDir, fileName);
   const { html: beautifyHtml } = jsBeautify;
 
   const tasks = new Listr([
