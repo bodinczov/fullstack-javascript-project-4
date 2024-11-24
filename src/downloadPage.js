@@ -53,7 +53,7 @@ const downloadPage = (url, outputDir) => {
     },
   ]);
 
-  return tasks.run()
+  return tasks.run();
 };
 
 export default downloadPage;
